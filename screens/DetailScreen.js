@@ -1,7 +1,5 @@
-// DetailScreen.js
-
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Pressable, Text } from 'react-native';
 import { Title, NormalText, SubTitle } from '../components/FrontEndCR';
 import BiometricAuth from '../components/BiometricAuth';
 
@@ -22,6 +20,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: 'blue',
   },
 });
 

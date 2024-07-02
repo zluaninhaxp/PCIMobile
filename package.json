@@ -11,6 +11,9 @@
   "dependencies": {
     "@expo/metro-config": "^0.18.7",
     "@expo/metro-runtime": "~3.2.1",
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-firebase/app": "^20.1.0",
+    "@react-native-firebase/messaging": "^20.1.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
     "expo": "~51.0.14",
@@ -21,12 +24,18 @@
     "expo-image-picker": "~15.0.5",
     "expo-local-authentication": "~14.0.1",
     "expo-location": "~17.0.1",
+    "expo-notifications": "~0.28.9",
     "expo-secure-store": "~13.0.1",
+    "expo-sqlite": "~14.0.4",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.2",
     "react-native-maps": "1.14.0",
+    "react-native-paper": "^5.12.3",
+    "react-native-polyfill-globals": "^3.1.0",
+    "react-native-toast-message": "^2.2.0",
+    "react-native-vector-icons": "^10.1.0",
     "react-native-web": "~0.19.10"
   },
   "devDependencies": {
