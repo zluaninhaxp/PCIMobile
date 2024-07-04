@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Title, NormalText, ButtonGroup } from '../components/FrontEndCR'; // Substitua pelo caminho correto do seu componente FrontEndCR
-import {NotificationOnApp, PushNotificationHandler} from '../components/Notification'; // Verifique o caminho correto para Notification
+import {NotificationOnApp} from '../components/NotificationOnApp'; // Verifique o caminho correto para Notification
 
 const RoomSelectionScreen = ({ navigation }) => {
   const buttons = [
@@ -16,7 +16,6 @@ const RoomSelectionScreen = ({ navigation }) => {
       <NormalText texto="Portas em que você tem acesso:" />
       <ButtonGroup buttons={buttons} navigation={navigation} />
       <NotificationOnApp title="Título da Notificação" message="Este é o texto da notificação." />
-      <PushNotificationHandler />
     </View>
   );
 };

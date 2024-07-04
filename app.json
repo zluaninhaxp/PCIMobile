@@ -23,13 +23,27 @@
       "expo-secure-store"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "NSAllowsLocalNetworking": true,
+        "NSAllowsArbitraryLoadsInWebContent": true,
+        "NSAllowsArbitraryLoads": true,
+        "NSAllowsEmailAddresses": true 
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "SEND_EMAIL"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
