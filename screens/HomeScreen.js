@@ -34,19 +34,23 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TextInput
+        style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
       />
       <TextInput
+        style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Login" onPress={handleLogin} />
+      <Pressable style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </Pressable>
     </View>
   );
 };
