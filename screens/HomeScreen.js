@@ -10,69 +10,43 @@ const HomeScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.get('https://campusinteligente.ifsuldeminas.edu.br/dynamic-api/auth/usuarios/');
+      const response = await fetch('...', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-      if (response.data && response.data.length > 0) {
-        const user = response.data.find(user => user.username === username);
+      const data = await response.json();
 
-        if (user) {
-          const hashedPasswordApp = generatePbkdf2Sha256(password, user.password);
-
-          console.log('Senha digitada:', password);
-          console.log('Hash gerado no aplicativo:', hashedPasswordApp);
-          console.log('Hash da API:', user.password);
-
-          // Comparando os hashes gerados
-          if (hashedPasswordApp === user.password) {
-            navigation.navigate('RoomSelection', { user });
-          } else {
-            Alert.alert('Erro', 'Usuário ou senha incorretos. Por favor, tente novamente.');
-          }
-        } else {
-          Alert.alert('Erro', 'Usuário não encontrado. Por favor, verifique o nome de usuário.');
-        }
+      if (response.status === 200) {
+        // Autenticação bem-sucedida, redirecione para a próxima tela
+        Alert.alert('Login successful');
+        navigation.navigate('NextScreen', { userId: data.user_id });
       } else {
-        Alert.alert('Erro', 'Não foi possível obter a lista de usuários. Por favor, tente novamente.');
+        // Autenticação falhou, mostre uma mensagem de erro
+        Alert.alert('Invalid credentials');
       }
     } catch (error) {
-      console.error('Erro ao tentar fazer login:', error.message);
-      Alert.alert('Erro', 'Ocorreu um erro ao tentar fazer login. Por favor, tente novamente.');
+      console.error('Error during login:', error);
     }
   };
 
-  // Função para gerar hash pbkdf2_sha256
-  const generatePbkdf2Sha256 = (password, storedPassword) => {
-    const [algorithm, iterations, salt, expectedHash] = storedPassword.split('$');
-    const shaObj = new jsSHA('SHA-256', 'TEXT');
-
-    shaObj.setHMACKey(password, 'TEXT');
-    shaObj.update(salt);
-
-    const hmac = shaObj.getHMAC('HEX');
-    const generatedHash = `${algorithm}$${iterations}$${salt}$${hmac}`;
-
-    return generatedHash;
-  };
-
   return (
-    <View style={styles.container}>
-      <Title titulo="Login" />
+    <View>
       <TextInput
-        style={styles.input}
-        placeholder="Usuário"
+        placeholder="Username"
         value={username}
         onChangeText={setUsername}
       />
       <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        secureTextEntry
+        placeholder="Password"
         value={password}
         onChangeText={setPassword}
+        secureTextEntry
       />
-      <Pressable onPress={handleLogin} style={styles.button}>
-        <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
+      <Button title="Login" onPress={handleLogin} />
     </View>
   );
 };
