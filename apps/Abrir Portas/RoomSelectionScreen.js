@@ -8,6 +8,7 @@ const RoomSelectionScreen = ({ navigation }) => {
     { label: 'Sala 14', screenName: 'Acesso por biometria' },
     { label: 'Sala 15', screenName: 'Acesso por biometria' },
     { label: 'Sala 16', screenName: 'Acesso por biometria' },
+    { label: 'Sala 17', screenName: 'Acesso por biometria' },
   ];
 
   return (
