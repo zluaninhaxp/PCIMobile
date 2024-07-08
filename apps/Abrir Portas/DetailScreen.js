@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
-import { Title, NormalText, SubTitle } from '../components/FrontEndCR';
-import BiometricAuth from '../components/BiometricAuth';
+import { Title, NormalText, SubTitle } from '../../components/FrontEndCR';
+import BiometricAuth from '../../components/BiometricAuth';
 
 const DetailScreen = () => {
   return (

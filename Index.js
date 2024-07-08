@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Pressable, Text, Alert } from 'react-native';
-import { Title } from '../components/FrontEndCR'; // Substitua pelo caminho correto do seu componente FrontEndCR
+import { Title } from './components/FrontEndCR'; // Substitua pelo caminho correto do seu componente FrontEndCR
 import jsSHA from 'jssha';
 import axios from 'axios';
 

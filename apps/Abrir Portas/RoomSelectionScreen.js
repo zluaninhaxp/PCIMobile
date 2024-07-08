@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Title, NormalText, ButtonGroup } from '../components/FrontEndCR'; // Substitua pelo caminho correto do seu componente FrontEndCR
-import {NotificationOnApp} from '../components/NotificationOnApp'; // Verifique o caminho correto para Notification
+import { Title, NormalText, ButtonGroup } from '../../components/FrontEndCR'; // Substitua pelo caminho correto do seu componente FrontEndCR
+import {NotificationOnApp} from '../../components/NotificationOnApp'; // Verifique o caminho correto para Notification
 
 const RoomSelectionScreen = ({ navigation }) => {
   const buttons = [

@@ -1,12 +1,11 @@
-// App.js
-
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import HomeScreen from './screens/HomeScreen'; // Substitua pelo caminho correto do seu componente HomeScreen
-import RoomSelectionScreen from './screens/RoomSelectionScreen'; // Substitua pelo caminho correto do seu componente RoomSelectionScreen
-import DetailScreen from './screens/DetailScreen'; // Substitua pelo caminho correto do seu componente DetailScreen
+// Importação dos componentes
+import HomeScreen from './Index'; // Verifique se o caminho está correto
+import RoomSelectionScreen from './apps/Abrir Portas/RoomSelectionScreen'; // Verifique se o caminho está correto
+import DetailScreen from './apps/Abrir Portas/DetailScreen'; // Verifique se o caminho está correto
 
 const Stack = createStackNavigator();
 
@@ -16,7 +15,7 @@ const App = () => {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="RoomSelection" component={RoomSelectionScreen} />
-        <Stack.Screen name="Acesso por biometria" component={DetailScreen} />
+        <Stack.Screen name="AcessoPorBiometria" component={DetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
