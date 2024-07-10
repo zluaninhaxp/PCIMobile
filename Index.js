@@ -1,62 +1,56 @@
+// Index.js
+
 import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Pressable, Text, Alert } from 'react-native';
-import { Title } from './components/FrontEndCR'; // Substitua pelo caminho correto do seu componente FrontEndCR
-import jsSHA from 'jssha';
-import axios from 'axios';
+import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
+import { Title, NormalText } from './components/FrontEndCR';
+import ExpandableMenu from './ExpandableMenu'; // Certifique-se de ajustar o caminho conforme necessário
 
 const HomeScreen = ({ navigation }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleLogin = async () => {
-    // Comentando a parte da API
-    /*
-    try {
-      const response = await fetch('...', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 200) {
-        // Autenticação bem-sucedida, redirecione para a próxima tela
-        Alert.alert('Login successful');
-        navigation.navigate('NextScreen', { userId: data.user_id });
-      } else {
-        // Autenticação falhou, mostre uma mensagem de erro
-        Alert.alert('Invalid credentials');
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-    }
-    */
-
-    // Redirecionar diretamente para a próxima tela
-    navigation.navigate('RoomSelection');
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
   };
+
+  // Defina as rotas para os diferentes aplicativos
+  const routes = [
+    { label: 'Agrícola', screenName: 'HomeAgricola' },
+    { label: 'Colabore', screenName: 'HomeColabore' },
+    { label: 'Edifícios', screenName: 'HomeEdificios' },
+    { label: 'Florestas', screenName: 'HomeFlorestas' },
+    { label: 'Gestão de Projetos', screenName: 'HomeGP' },
+    { label: 'Indústria', screenName: 'HomeIndustria' },
+    { label: 'MIA', screenName: 'HomeMIA' },
+    { label: 'Pecuária', screenName: 'HomePecuaria' },
+    { label: 'Segurança', screenName: 'HomeSeguranca' },
+    { label: 'Solicita', screenName: 'HomeSolicita' },
+    { label: 'Sustentabilidade', screenName: 'HomeSustentabilidade' },
+  ];
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Pressable style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
+      <View style={styles.header}>
+        <Pressable onPress={toggleMenu}>
+          <Image
+            source={require('./assets/toggle-menu.png')}
+            style={styles.imagemHeader}
+            resizeMode="cover"
+          />
+        </Pressable>
+        <Pressable style={styles.loginButton} onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.loginButtonText}>Login</Text>
+        </Pressable>
+      </View>
+      <View style={styles.cardContainer}>
+        <Image
+          source={require('./assets/pci_logo.png')}
+          style={styles.imagemPrincipal}
+          resizeMode="cover"
+        />
+        <Title titulo="Programa Campus Inteligente" />
+        <NormalText texto="Corpo do app (apps liberados e infos)" />
+      </View>
+      {isMenuOpen && <ExpandableMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} routes={routes} />}
     </View>
   );
 };
@@ -64,26 +58,57 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#f8f4f4',
     alignItems: 'center',
-    padding: 16,
+    justifyContent: 'flex-start',
+    gap: 30,
   },
-  input: {
-    width: '80%',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 11.5,
+    backgroundColor: 'white',
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    width: '100%',
+  },
+  loginButton: {
     padding: 10,
-    marginVertical: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    backgroundColor: '#007bff',
     borderRadius: 5,
   },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
+  loginButtonText: {
     color: '#fff',
-    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  imagemPrincipal: {
+    width: 150,
+    height: 150,
+  },
+  imagemHeader: {
+    width: 30,
+    height: 30,
+  },
+  tituloAplicativos: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center', // Alinha os itens no centro
+    width: '100%', // Define a largura para 100%
+    gap: 10,
+    padding: 20,
   },
 });
 

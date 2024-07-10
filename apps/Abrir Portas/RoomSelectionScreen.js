@@ -16,7 +16,6 @@ const RoomSelectionScreen = ({ navigation }) => {
       <Title titulo="Sistema de abrir portas" />
       <NormalText texto="Portas em que você tem acesso:" />
       <ButtonGroup buttons={buttons} navigation={navigation} />
-      <NotificationOnApp title="Título da Notificação" message="Este é o texto da notificação." />
     </View>
   );
 };
