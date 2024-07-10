@@ -5,10 +5,10 @@ import {NotificationOnApp} from '../../components/NotificationOnApp'; // Verifiq
 
 const RoomSelectionScreen = ({ navigation }) => {
   const buttons = [
-    { label: 'Sala 14', screenName: 'Acesso por biometria' },
-    { label: 'Sala 15', screenName: 'Acesso por biometria' },
-    { label: 'Sala 16', screenName: 'Acesso por biometria' },
-    { label: 'Sala 17', screenName: 'Acesso por biometria' },
+    { label: 'Sala 14', screenName: 'AcessoPorBiometria' },
+    { label: 'Sala 15', screenName: 'AcessoPorBiometria' },
+    { label: 'Sala 16', screenName: 'AcessoPorBiometria' },
+    { label: 'Sala 17', screenName: 'AcessoPorBiometria' },
   ];
 
   return (

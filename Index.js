@@ -9,6 +9,8 @@ const HomeScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
+    // Comentando a parte da API
+    /*
     try {
       const response = await fetch('...', {
         method: 'POST',
@@ -31,6 +33,10 @@ const HomeScreen = ({ navigation }) => {
     } catch (error) {
       console.error('Error during login:', error);
     }
+    */
+
+    // Redirecionar diretamente para a próxima tela
+    navigation.navigate('RoomSelection');
   };
 
   return (
