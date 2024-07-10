@@ -22,7 +22,7 @@
     "expo": "~51.0.14",
     "expo-av": "~14.0.5",
     "expo-barcode-scanner": "~13.0.1",
-    "expo-camera": "~15.0.11",
+    "expo-camera": "~15.0.13",
     "expo-crypto": "~13.0.2",
     "expo-image-picker": "~15.0.5",
     "expo-local-authentication": "~14.0.1",
