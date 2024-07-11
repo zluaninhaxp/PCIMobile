@@ -1,5 +1,3 @@
-// Index.js
-
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import { Title, NormalText } from './components/FrontEndCR';
@@ -61,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f4f4',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 30,
+    flexDirection: 'column', // Alinha os elementos verticalmente 
   },
   header: {
     flexDirection: 'row',
@@ -90,6 +88,7 @@ const styles = StyleSheet.create({
   imagemPrincipal: {
     width: 150,
     height: 150,
+    marginBottom: 20, // Espaçamento inferior
   },
   imagemHeader: {
     width: 30,
@@ -102,12 +101,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cardContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center', // Alinha os itens no centro
+    alignItems: 'center',
     width: '100%', // Define a largura para 100%
-    gap: 10,
     padding: 20,
   },
 });

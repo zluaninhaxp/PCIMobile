@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as Crypto from 'expo-crypto';
+import NotificationOnApp from './NotificationOnApp';
 
 export default function BiometricAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -45,7 +46,6 @@ export default function BiometricAuth() {
       const code = await generateAuthCode(biometricData);
       setAuthCode(code);
       setIsAuthenticated(true);
-      console.log(`Código de autenticação: ${code}`);
       Alert.alert("Sucesso", `Biometria escaneada com sucesso!`);
       // Alert.alert("Sucesso", `Autenticação bem-sucedida! Código: ${code}`);
     } else {
