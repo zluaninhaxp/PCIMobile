@@ -33,8 +33,11 @@
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO",
-        "SEND_EMAIL"
-      ]
+        "SEND_EMAIL",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.zluhcastro.pcimobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -49,6 +52,11 @@
         }
       ],
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "c6cffb23-657d-4de1-b31e-cc6ec84d8252"
+      }
+    }
   }
 }

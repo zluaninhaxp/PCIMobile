@@ -8,34 +8,13 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    // Comentando a parte da API
-    /*
-    try {
-      const response = await fetch('...', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.status === 200) {
-        // Autenticação bem-sucedida, redirecione para a próxima tela
-        Alert.alert('Login successful');
-        navigation.navigate('NextScreen', { userId: data.user_id });
-      } else {
-        // Autenticação falhou, mostre uma mensagem de erro
-        Alert.alert('Invalid credentials');
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
+    // Aqui você pode adicionar a lógica de autenticação do usuário
+    // Por agora, vamos apenas passar o username como ID do usuário
+    if (username) {
+      navigation.navigate('RoomSelection', { userId: username });
+    } else {
+      Alert.alert('Erro', 'Por favor, insira um ID de usuário.');
     }
-    */
-
-    // Redirecionar diretamente para a próxima tela
-    navigation.navigate('RoomSelection');
   };
 
   return (

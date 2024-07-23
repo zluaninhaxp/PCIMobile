@@ -1,62 +1,54 @@
-// BiometricAuth.js
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, Alert } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
-import * as Crypto from 'expo-crypto';
-import NotificationOnApp from './NotificationOnApp';
 
-export default function BiometricAuth() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authCode, setAuthCode] = useState(null);
-
-  const generateAuthCode = async (biometricData) => {
-    const hash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      biometricData
-    );
-    return hash;
-  };
-
+export default function BiometricAuth({ onAuthSuccess }) {
   const handleAuthentication = async () => {
-    const hasHardware = await LocalAuthentication.hasHardwareAsync();
-    if (!hasHardware) {
-      Alert.alert("Erro", "Dispositivo não suporta autenticação biométrica.");
-      return;
-    }
+    try {
+      const hasHardware = await LocalAuthentication.hasHardwareAsync();
+      if (!hasHardware) {
+        Alert.alert("Erro", "Dispositivo não suporta autenticação biométrica.");
+        onAuthSuccess(false);
+        return;
+      }
 
-    const supportedTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
-    if (supportedTypes.length === 0) {
-      Alert.alert("Erro", "Nenhuma biometria suportada encontrada.");
-      return;
-    }
+      const supportedTypes = await LocalAuthentication.supportedAuthenticationTypesAsync();
+      if (supportedTypes.length === 0) {
+        Alert.alert("Erro", "Nenhuma biometria suportada encontrada.");
+        onAuthSuccess(false);
+        return;
+      }
 
-    const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-    if (!isEnrolled) {
-      Alert.alert("Erro", "Nenhuma biometria cadastrada.");
-      return;
-    }
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+      if (!isEnrolled) {
+        Alert.alert("Erro", "Nenhuma biometria cadastrada.");
+        onAuthSuccess(false);
+        return;
+      }
 
-    const result = await LocalAuthentication.authenticateAsync({
-      promptMessage: "Autenticar",
-      fallbackLabel: "Use senha",
-    });
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: "Autenticar",
+        fallbackLabel: "Use senha",
+      });
 
-    if (result.success) {
-      const biometricData = JSON.stringify(result); // Simulação de dados biométricos
-      const code = await generateAuthCode(biometricData);
-      setAuthCode(code);
-      setIsAuthenticated(true);
-      Alert.alert("Sucesso", `Biometria escaneada com sucesso!`);
-      // Alert.alert("Sucesso", `Autenticação bem-sucedida! Código: ${code}`);
-    } else {
-      Alert.alert("Falha", "Autenticação falhou.");
+      if (result.success) {
+        Alert.alert("Sucesso", "Autenticação bem-sucedida!");
+        onAuthSuccess(true);
+      } else {
+        Alert.alert("Falha", "Autenticação falhou.");
+        onAuthSuccess(false);
+      }
+    } catch (error) {
+      console.log('Erro ao autenticar:', error);
+      Alert.alert("Erro", "Erro ao autenticar.");
+      onAuthSuccess(false);
     }
   };
 
   return (
     <TouchableOpacity style={styles.button} onPress={handleAuthentication}>
-    <Text style={styles.buttonText}>Escanear biometria</Text>
-  </TouchableOpacity>
+      <Text style={styles.buttonText}>Escanear biometria</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -73,4 +65,3 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
 });
-

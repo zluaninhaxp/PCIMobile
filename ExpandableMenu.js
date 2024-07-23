@@ -1,5 +1,3 @@
-// ExpandableMenu.js
-
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
@@ -58,15 +56,14 @@ const styles = StyleSheet.create({
   menuContainer: {
     position: 'absolute',
     top: 0,
-    left: 0, // Posiciona o menu à esquerda
+    left: 0,
     height: '100%',
     width: 300,
     backgroundColor: '#fff',
     padding: 20,
-    shadowOffset: { width: 5, height: 0 }, // Ajusta a sombra para a direção correta
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+    // Utilizando boxShadow ao invés de shadow*
+    boxShadow: '5px 0px 4px rgba(0, 0, 0, 0.2)',
+    elevation: 5, // Mantém a elevação para plataformas que suportam
   },
   header: {
     flexDirection: 'row',
