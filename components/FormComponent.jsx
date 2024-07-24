@@ -1,24 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Button, Pressable, ScrollView, Image, LayoutAnimation, Platform } from 'react-native';
+import { 
+  StyleSheet, View, Text, TextInput, Button, Pressable, 
+  ScrollView, Image, LayoutAnimation, Platform 
+} from 'react-native';
 import { Checkbox } from 'expo-checkbox';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { saveFormData } from './ASComponent'; // Importe a função saveFormData
-
+import { saveFormData, getFormData, updateFormData, deleteFormData } from './ASComponent'; // Importa as funções do SQLComponent
 
 const FORM_DATA_KEY = 'formData'; // Chave para armazenar os dados no AsyncStorage
 
-const FormComponent = ({ fields, containerId, onSubmit }) => {
+const FormComponent = ({ fields, containerId }) => {
   const [formData, setFormData] = useState({});
   const [dateError, setDateError] = useState(null);
   const [inlineFields, setInlineFields] = useState({});
 
+  useEffect(() => {
+    // Inicializa o estado dos campos inline com base nos campos passados
+    const initialInlineFields = {};
+    fields.forEach(field => {
+      if (field[0] === 'inline') {
+        initialInlineFields[field[1]] = [field[2]]; // Começa com um conjunto vazio
+      }
+    });
+    setInlineFields(initialInlineFields);
+  }, [fields]); // Executa apenas uma vez na montagem do componente
+
   const handleSubmit = async () => {
     await saveFormData(formData);
-    onSubmit(formData);
+    const data = await getFormData();
+    if (data) {
+    console.log('Dados carregados:', data);
+    // Aqui você pode usar os dados carregados para preencher o formulário
+    }
   };
-
 
   const loadFormData = async () => {
     try {
@@ -29,22 +45,6 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
     } catch (error) {
       console.error('Erro ao carregar dados do formulário:', error);
     }
-  };
-
-  const handleInputChange = (name, value) => {
-    setFormData(prevData => {
-      if (name.startsWith('upload_')) {
-        const existingFiles = prevData[name] || [];
-        if (value) {
-          return { ...prevData, [name]: [...existingFiles, value.uri] }; // Salva apenas o URI
-        } else {
-          return prevData;
-        }
-      } else {
-        return { ...prevData, [name]: value };
-      }
-    });
-    saveFormData();
   };
 
   const handleRemoveImage = (name, index) => {
@@ -61,19 +61,24 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
     const yearInt = parseInt(year, 10);
 
     if (isNaN(dayInt) || isNaN(monthInt) || isNaN(yearInt)) {
-      return false;
+      return false; // Não é uma data válida se algum dos valores não for numérico
     }
 
+    // Verifica se o dia está entre 1 e 31
     if (dayInt < 1 || dayInt > 31) {
       return false;
     }
 
+    // Verifica se o mês está entre 1 e 12
     if (monthInt < 1 || monthInt > 12) {
       return false;
     }
 
-    return true;
+    // Você pode adicionar aqui validações mais complexas para anos bissextos, etc.
+
+    return true; // A data é válida
   };
+
 
   const pickImage = async (name) => {
     try {
@@ -83,10 +88,6 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
         aspect: [4, 3],
         quality: 1,
       });
-
-      if (!result.canceled) {
-        handleInputChange(name, result.assets[0]); // Salva o objeto da imagem
-      }
     } catch (error) {
       console.error('Erro ao escolher imagem:', error);
     }
@@ -119,17 +120,6 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
     );
   };
 
-  useEffect(() => {
-    // Inicializa o estado dos campos inline com base nos campos passados
-    const initialInlineFields = {};
-    fields.forEach(field => {
-      if (field[0] === 'inline') {
-        initialInlineFields[field[1]] = [field[2]]; // Começa com um conjunto vazio
-      }
-    });
-    setInlineFields(initialInlineFields);
-  }, [fields]); // Executa apenas uma vez na montagem do componente
-
   const handleAddInlineField = (label) => {
     setInlineFields(prevFields => ({
       ...prevFields,
@@ -156,7 +146,6 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
             <TextInput
               style={styles.input}
               placeholder={label}
-              onChangeText={(text) => handleInputChange(label, text)}
             />
           </View>
         );
@@ -169,7 +158,7 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
                 <Pressable
                   key={option}
                   style={styles.radioButton}
-                  onPress={() => handleInputChange(label, option)}
+                  onPress={() => setFormData(prevData => ({ ...prevData, [label]: option }))} // Correção: adiciona o onPress para atualizar o estado
                 >
                   <View style={[styles.radioButtonOuter, formData[label] === option && styles.radioButtonOuterActive]}>
                     {formData[label] === option && <View style={styles.radioButtonInner} />}
@@ -187,7 +176,9 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
             <Picker
               style={styles.picker}
               selectedValue={formData[label] || ''}
-              onValueChange={(itemValue) => handleInputChange(label, itemValue)}
+              onValueChange={(itemValue) =>
+                setFormData(prevData => ({ ...prevData, [label]: itemValue }))
+              }
             >
               {options && options.map((option, index) => (
                 <Picker.Item key={index} label={option} value={option} />
@@ -206,11 +197,13 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
                   <View key={option} style={styles.checkboxItem}>
                     <Checkbox
                       style={styles.checkbox}
-                      value={formData[label]?.[option] || false}
-                      onValueChange={(newValue) => handleInputChange(label, {
-                        ...formData[label],
-                        [option]: newValue,
-                      })}
+                      value={formData[label]?.includes(option) || false}
+                      onValueChange={(newValue) => setFormData(prevData => ({
+                        ...prevData,
+                        [label]: newValue
+                          ? (prevData[label] || []).concat(option) // Adiciona ao array se marcado
+                          : (prevData[label] || []).filter(item => item !== option) // Remove do array se desmarcado
+                      }))}
                     />
                     <Text style={styles.checkboxText}>{option}</Text>
                   </View>
@@ -229,7 +222,6 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
               style={[styles.input, styles.textarea]}
               multiline
               rows={4}
-              onChangeText={(text) => handleInputChange(label, text)}
             />
           </View>
         );
@@ -272,15 +264,12 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
               placeholder="DD/MM/AAAA"
               value={formData[label] || ''}
               onChangeText={(text) => {
-                // Aplica a máscara à medida que o usuário digita
-                let formattedText = text.replace(/[^0-9]/g, ''); // Remove caracteres não numéricos
-                if (formattedText.length > 2) {
-                  formattedText = formattedText.slice(0, 2) + '/' + formattedText.slice(2);
-                }
-                if (formattedText.length > 5) {
-                  formattedText = formattedText.slice(0, 5) + '/' + formattedText.slice(5, 9);
-                }
-
+                let formattedText = text.replace(/[^0-9]/g, '');
+                if (formattedText.length > 2) formattedText = formattedText.slice(0, 2) + '/' + formattedText.slice(2);
+                if (formattedText.length > 5) formattedText = formattedText.slice(0, 5) + '/' + formattedText.slice(5);
+  
+                setFormData(prevData => ({ ...prevData, [label]: formattedText }));
+  
                 const [day, month, year] = formattedText.split('/');
                 if (day && month && year && !isValidDate(day, month, year)) {
                   setDateError('Data inválida');
@@ -288,8 +277,6 @@ const FormComponent = ({ fields, containerId, onSubmit }) => {
                 } else {
                   setDateError(null);
                 }
-                handleInputChange(label, formattedText);
-
               }}
               inputMode="numeric"
               maxLength={10} // Limita o tamanho para 10 caracteres (DD/MM/AAAA)
@@ -411,6 +398,9 @@ const styles = StyleSheet.create({
   removeButton: {
     fontSize: 16,
     color: 'red',
+  },
+  errorText: {
+    overflowWrap: 'break-word',
   },
   uploadButton: { // Estilos para o botão de upload
     backgroundColor: '#4CAF50', // Cor de fundo (verde)
