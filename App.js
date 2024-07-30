@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Picker, TouchableOpacity, ScrollView } from 'react-native';
+import React from 'react';
+import { StyleSheet, Alert, ScrollView, View, Text } from 'react-native';
+import FormComponent from './components/FormComponent';
+import Header from './components/HeaderComponent';
 
 // Dados de exemplo para os dropdowns (substitua pelos seus dados reais)
 const areas = [
@@ -14,96 +16,47 @@ const locais = [
   // ... outros locais
 ];
 
+const fields = [
+  ['text', 'Resposta Curta'],
+  ['picker', 'Área', areas.map(area => area.area)],
+  ['picker', 'Local', locais.map(local => local.local)],
+  ['textarea', 'Descrição'],
+  ['upload', 'Imagem'],
+];
+
+const handleSetorPress = () => {
+  console.log('Setor button pressed');
+};
+
+const handleHistoricoPress = () => {
+  console.log('Histórico button pressed');
+};
+
+const headerTitle = "Col@bore!";
+const headerItems = [
+  { name: 'Setor', onPress: handleSetorPress },
+  { name: 'Histórico', onPress: handleHistoricoPress },
+];
+
 export default function App() {
-  const [formData, setFormData] = useState({
-    respostaCurta: '',
-    dropdownArea: '',
-    dropdownLocal: '',
-    respostaLonga: '',
-    imagem: null,
-  });
-
-  const handleSubmit = () => {
-    // Lógica para enviar o formulário (você irá implementar isso mais tarde)
-    console.log(formData);
-  };
-
   return (
-    <ScrollView style={styles.formContainer}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Formulário de Feedback</Text>
-
-        {/* Resposta Curta */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Resposta Curta:</Text>
-          <TextInput
-            style={styles.input}
-            value={formData.respostaCurta}
-            onChangeText={(text) => setFormData({ ...formData, respostaCurta: text })}
-          />
+    <View style={styles.appContainer}>
+      <Header title={headerTitle} items={headerItems}/>
+      <ScrollView style={styles.formContainer}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Col@bore!</Text>
+          <FormComponent fields={fields} />
         </View>
-
-        {/* Dropdown Área */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Área:</Text>
-          <Picker
-            selectedValue={formData.dropdownArea}
-            onValueChange={(itemValue) => setFormData({ ...formData, dropdownArea: itemValue })}
-          >
-            <Picker.Item label="" value="" />
-            {areas.map((area) => (
-              <Picker.Item key={area.id} label={area.area} value={area.id} />
-            ))}
-          </Picker>
-        </View>
-
-        {/* Dropdown Local */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Local:</Text>
-          <Picker
-            selectedValue={formData.dropdownLocal}
-            onValueChange={(itemValue) => setFormData({ ...formData, dropdownLocal: itemValue })}
-          >
-            <Picker.Item label="" value="" />
-            {locais.map((local) => (
-              <Picker.Item key={local.id} label={local.local} value={local.id} />
-            ))}
-          </Picker>
-        </View>
-
-        {/* Resposta Longa */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Descrição:</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            multiline
-            numberOfLines={4}
-            value={formData.respostaLonga}
-            onChangeText={(text) => setFormData({ ...formData, respostaLonga: text })}
-          />
-        </View>
-
-        {/* Imagem (substituir por componente de upload de imagem) */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Imagem:</Text>
-          <TouchableOpacity 
-            style={styles.uploadButton}
-            onPress={() => { /* Lógica para escolher imagem */ }}
-          >
-            <Text style={styles.uploadButtonText}>Escolher Imagem</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Botão Enviar */}
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-          <Text style={styles.submitButtonText}>Enviar Resposta</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  appContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -112,44 +65,16 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center', // Centraliza o texto
+    textAlign: 'center',
   },
   formContainer: {
-    backgroundColor: '#fff', // Fundo branco (equivalente a bg-white)
+    backgroundColor: '#fff',
     padding: 20,
-    borderRadius: 10, // Cantos arredondados
-    shadowColor: '#000', // Sombra (equivalente a shadow-sm)
+    borderRadius: 10,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    elevation: 2, // Sombra para Android
+    elevation: 2,
   },
-  inputGroup: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-  },
-  textArea: {
-    height: 100,
-  },
-  submitButton: {
-    backgroundColor: '#007bff', // Cor de fundo azul (equivalente a btn-primary)
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  submitButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  }, 
 });
