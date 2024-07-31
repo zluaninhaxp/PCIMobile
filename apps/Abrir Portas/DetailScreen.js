@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Alert, Button, Text } from 'react-native';
+import { View, StyleSheet, Alert, Text } from 'react-native';
 import { Title, NormalText, SubTitle, ImportantText } from '../../components/FrontEndCR';
 import BiometricAuth from '../../components/BiometricAuth';
+import BluetoothManager from '../../components/BluetoothManager';
 
 const DetailScreen = ({ route, navigation }) => {
   const { roomNumber, buildingName, status, roomId, userId } = route.params; // Inclui userId
   const [doorOpen, setDoorOpen] = useState(null);
+  const [triggerCommand, setTriggerCommand] = useState(false);
+  const [command, setCommand] = useState('');
 
   useEffect(() => {
     const fetchRoomStatus = async () => {
@@ -38,10 +41,13 @@ const DetailScreen = ({ route, navigation }) => {
         },
         body: JSON.stringify({ aberta: newOpenStatus }),
       });
-  
+
       if (response.ok) {
         setDoorOpen(newOpenStatus);
         Alert.alert('Sucesso', `A porta foi ${newOpenStatus ? 'aberta' : 'fechada'} com sucesso!`);
+        // Envia o comando Bluetooth ao ESP
+        setCommand(newOpenStatus ? 'C' : 'F'); // 'C' para abrir, 'F' para fechar
+        setTriggerCommand(true);
         // Navega para a tela RoomSelectionScreen e força a atualização
         navigation.navigate('RoomSelection', { userId, refresh: true, buildingName });
       } else {
@@ -83,6 +89,11 @@ const DetailScreen = ({ route, navigation }) => {
       </Text>
       <NormalText texto={doorActionText} />
       <BiometricAuth onAuthSuccess={handleAuthSuccess} />
+      <BluetoothManager 
+        deviceMacAddress="D0:EF:76:33:68:4C" 
+        command={command} 
+        triggerCommand={triggerCommand} 
+      />
     </View>
   );
 };
