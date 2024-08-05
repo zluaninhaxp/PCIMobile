@@ -5,28 +5,18 @@ import * as Location from 'expo-location';
 
 const BluetoothManager = ({ deviceMacAddress, command, triggerCommand }) => {
   const [isConnected, setIsConnected] = useState(false);
+  const [manager] = useState(new BleManager());
   const [device, setDevice] = useState(null);
-  const [manager, setManager] = useState(null);
 
   useEffect(() => {
-    const initializeManager = async () => {
-      try {
-        const bleManager = new BleManager();
-        setManager(bleManager);
-        const subscription = bleManager.onStateChange((state) => {
-          if (state === 'PoweredOn') {
-            scanAndConnect();
-          }
-        }, true);
-
-        return () => subscription.remove();
-      } catch (error) {
-        console.log('Erro ao inicializar o BleManager:', error);
+    const subscription = manager.onStateChange((state) => {
+      if (state === 'PoweredOn') {
+        scanAndConnect();
       }
-    };
+    }, true);
 
-    initializeManager();
-  }, []);
+    return () => subscription.remove();
+  }, [manager]);
 
   const requestPermissions = async () => {
     if (Platform.OS === 'android') {
@@ -42,8 +32,6 @@ const BluetoothManager = ({ deviceMacAddress, command, triggerCommand }) => {
   }, []);
 
   const scanAndConnect = () => {
-    if (!manager) return;
-
     manager.startDeviceScan(null, null, (error, scannedDevice) => {
       if (error) {
         console.log('Erro ao escanear dispositivos:', error);

@@ -23,7 +23,8 @@
         "NSAllowsLocalNetworking": true,
         "NSAllowsArbitraryLoadsInWebContent": true,
         "NSAllowsEmailAddresses": true
-      }
+      },
+      "bundleIdentifier": "com.zluhcastro.pcimobile"
     },
     "android": {
       "adaptiveIcon": {
