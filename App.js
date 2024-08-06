@@ -1,7 +1,13 @@
 import React from 'react';
-import { StyleSheet, Alert, ScrollView, View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import FormComponent from './components/FormComponent';
 import Header from './components/HeaderComponent';
+import Setor from './apps/Setor';
+import Historico from './apps/Historico';
+
+const Stack = createStackNavigator();
 
 // Dados de exemplo para os dropdowns (substitua pelos seus dados reais)
 const areas = [
@@ -24,31 +30,44 @@ const fields = [
   ['upload', 'Imagem'],
 ];
 
-const handleSetorPress = () => {
-  console.log('Setor button pressed');
-};
+function FeedbackForm({ navigation }) {
+  const headerTitle = "Col@bore!";
 
-const handleHistoricoPress = () => {
-  console.log('Histórico button pressed');
-};
+  const handleSetorPress = () => {
+    navigation.navigate('Setor');
+  };
 
-const headerTitle = "Col@bore!";
-const headerItems = [
-  { name: 'Setor', onPress: handleSetorPress },
-  { name: 'Histórico', onPress: handleHistoricoPress },
-];
+  const handleHistoricoPress = () => {
+    navigation.navigate('Historico');
+  };
 
-export default function App() {
+  const headerItems = [
+    { name: 'Setor', onPress: handleSetorPress },
+    { name: 'Histórico', onPress: handleHistoricoPress },
+  ];
+
   return (
     <View style={styles.appContainer}>
-      <Header title={headerTitle} items={headerItems}/>
+      <Header title={headerTitle} items={headerItems} navigation={navigation} />
       <ScrollView style={styles.formContainer}>
         <View style={styles.container}>
-          <Text style={styles.title}>Col@bore!</Text>
+          <Text style={styles.title}>Formulário de Feedback</Text>
           <FormComponent fields={fields} />
         </View>
       </ScrollView>
     </View>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="FeedbackForm">
+        <Stack.Screen name="FeedbackForm" component={FeedbackForm} options={{ headerShown: false }} />
+        <Stack.Screen name="Setor" component={Setor} />
+        <Stack.Screen name="Historico" component={Historico} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

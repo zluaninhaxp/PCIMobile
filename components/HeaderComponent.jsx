@@ -1,24 +1,28 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-export default function Header({ title, items }) {
-    return (
-      <View style={styles.header}>
-        <View style={styles.topRow}>
-          <Text style={styles.title}>{title}</Text>
-          <TouchableOpacity style={styles.logoutButton}>
-            <Text style={styles.logoutText}>Logout</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.bottomRow}>
-          {items.map((item, index) => (
-            <TouchableOpacity key={index} style={styles.button} onPress={item.onPress}>
-              <Text style={styles.buttonText}>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+export default function Header({ title, items, navigation }) {
+  return (
+    <View style={styles.header}>
+      <View style={styles.topRow}>
+        <Text style={styles.title}>{title}</Text>
+        <TouchableOpacity style={styles.logoutButton}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
       </View>
-    );
+      <View style={styles.bottomRow}>
+        {items.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.button}
+            onPress={() => item.onPress(navigation)}
+          >
+            <Text style={styles.buttonText}>{item.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
