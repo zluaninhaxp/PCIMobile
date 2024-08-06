@@ -1,13 +1,7 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState } from 'react';
 import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import FormComponent from './components/FormComponent';
 import Header from './components/HeaderComponent';
-import Setor from './apps/Setor';
-import Historico from './apps/Historico';
-
-const Stack = createStackNavigator();
 
 // Dados de exemplo para os dropdowns (substitua pelos seus dados reais)
 const areas = [
@@ -30,44 +24,45 @@ const fields = [
   ['upload', 'Imagem'],
 ];
 
-function FeedbackForm({ navigation }) {
+export default function App() {
+  const [visibleSection, setVisibleSection] = useState('Form');
+
+  const handleShowSection = (section) => {
+    setVisibleSection(section);
+  };
+
   const headerTitle = "Col@bore!";
 
-  const handleSetorPress = () => {
-    navigation.navigate('Setor');
-  };
-
-  const handleHistoricoPress = () => {
-    navigation.navigate('Historico');
-  };
-
   const headerItems = [
-    { name: 'Setor', onPress: handleSetorPress },
-    { name: 'Histórico', onPress: handleHistoricoPress },
+    ['Formulário', 'button', () => handleShowSection('Form')],
+    ['Setor', 'button', () => handleShowSection('Setor')],
+    ['Histórico', 'button', () => handleShowSection('Historico')],
   ];
 
   return (
     <View style={styles.appContainer}>
-      <Header title={headerTitle} items={headerItems} navigation={navigation} />
+      <Header title={headerTitle} items={headerItems} />
       <ScrollView style={styles.formContainer}>
         <View style={styles.container}>
-          <Text style={styles.title}>Formulário de Feedback</Text>
-          <FormComponent fields={fields} />
+          {visibleSection === 'Form' && (
+            <View>
+              <Text style={styles.title}>Formulário de Feedback</Text>
+              <FormComponent fields={fields} />
+            </View>
+          )}
+          {visibleSection === 'Setor' && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Bom dia</Text>
+            </View>
+          )}
+          {visibleSection === 'Historico' && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Bom noite</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>
-  );
-}
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="FeedbackForm">
-        <Stack.Screen name="FeedbackForm" component={FeedbackForm} options={{ headerShown: false }} />
-        <Stack.Screen name="Setor" component={Setor} />
-        <Stack.Screen name="Historico" component={Historico} />
-      </Stack.Navigator>
-    </NavigationContainer>
   );
 }
 
@@ -95,5 +90,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 2,
+  },
+  section: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

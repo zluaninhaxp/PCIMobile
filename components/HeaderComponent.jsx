@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-export default function Header({ title, items, navigation }) {
+export default function Header({ title, items }) {
   return (
     <View style={styles.header}>
       <View style={styles.topRow}>
@@ -15,9 +15,9 @@ export default function Header({ title, items, navigation }) {
           <TouchableOpacity
             key={index}
             style={styles.button}
-            onPress={() => item.onPress(navigation)}
+            onPress={item[2]} // A função de ação está na terceira posição do array
           >
-            <Text style={styles.buttonText}>{item.name}</Text>
+            <Text style={styles.buttonText}>{item[0]}</Text>
           </TouchableOpacity>
         ))}
       </View>
